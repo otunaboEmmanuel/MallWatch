@@ -1,10 +1,11 @@
 package com.basicproject.project.entities;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name ="NEW_PROJECT") public class User {
+@Table(name ="NEW_PROJECT")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
      private Long id;
