@@ -19,7 +19,7 @@ public class Products {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String productId;
+    private Long productId;
 
     @Column(name = "store_name")
     private String storeName;
@@ -46,4 +46,14 @@ public class Products {
     @Column(name = "product_images", columnDefinition = "TEXT")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<String> productImages;
+
+    @ElementCollection
+    @Column(name = "available_colors")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<String> availableColors;
+
+    @ElementCollection
+    @Column(name = "available_sizes")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<String> availableSizes;
 }

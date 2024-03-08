@@ -2,8 +2,9 @@ package com.basicproject.project.controller;
 
 
 import com.basicproject.project.dto.ProductDto;
+import com.basicproject.project.dto.Responses.CustomResponse;
+import com.basicproject.project.dto.Responses.Responses;
 import com.basicproject.project.entities.Products;
-import com.basicproject.project.entities.Responses;
 import com.basicproject.project.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,12 @@ public class ProductController {
 
 
     @PostMapping("/add-product")
-    public ResponseEntity<?> addProducts(@RequestBody Products products) {
+    public ResponseEntity<?> addProducts(@RequestBody ProductDto products) {
         log.info("Incoming requests with body "+products.toString());
 
         Products result = productService.addNewProduct(products);
-        return products != null ? new ResponseEntity<>(new Responses("00", "Record Saved Successfully"), HttpStatus.OK)
-                : new ResponseEntity<>(new Responses("99", "Record not saved, Ensure product name does not exist"), HttpStatus.OK);
+        return result != null ? new ResponseEntity<>(new CustomResponse(Responses.PRODUCT_CREATED.getCode(), Responses.PRODUCT_CREATED.getMessage()), HttpStatus.OK)
+                : new ResponseEntity<>(new CustomResponse(Responses.UNEXPECTED_ERROR.getCode(), Responses.UNEXPECTED_ERROR.getMessage()), HttpStatus.OK);
     }
 
     @PostMapping("/findProductsByStore")
@@ -39,4 +40,14 @@ public class ProductController {
         List<Products> allStoreProducts = productService.findAllProductsByStore(productDto.getStoreName());
         return new ResponseEntity<>(allStoreProducts, HttpStatus.OK);
     }
+
+    @PostMapping("/findProductsyId")
+    public ResponseEntity<?> findProductsById(@RequestBody ProductDto productDto) {
+        log.info("Incoming DTO "+productDto);
+
+        Products products = productService.findProductById(productDto.getProductId());
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.basicproject.project.config;
 
 
+import com.basicproject.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,26 +19,26 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
-//    @Autowired
-//    UserService userService;
+    @Autowired
+    UserService userService;
 
 
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder(11);
-//    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(11);
+    }
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
-//    }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+    }
 
-//    @Override
-//    @Bean
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -70,4 +71,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        source.registerCorsConfiguration("/**", configuration);
 //        return source;
 //    }
-}
+    }
