@@ -17,6 +17,7 @@ public class UserServiceImp implements UserService {
     public User saveUsers(User user) {
         User user1 = userRepository.findByEmail(user.getEmail()).orElse(null);
         user.setPassword(bcryptEncoder.encode(user.getPassword()));
+        user.setRole("USER");
         return (user1==null )? userRepository.save(user):null;
 
     }

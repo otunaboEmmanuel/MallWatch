@@ -11,6 +11,8 @@ public class User {
      private Long id;
     @Column(name = "First_Name")
     private String firstName;
+    @Column(name = "Role")
+    private String Role;
     @Column(name="Last_Name")
     private String lastName;
 
@@ -18,13 +20,31 @@ public class User {
     private String fullName= firstName + lastName;
     @Column (name = "email",unique = true)
     private String email;
+
+    @Column (name = "otp",unique = true)
+    private Integer otp;
     @Column(name="password")
     //@JsonIgnore
     private String password;
+    @OneToOne(mappedBy = "user")
+    private ForgotPassword forgotPassword;
     @Lob
    // @Type(type="org.hibernate.type.TextType")
     @Column(name="profile_picture")
     private String profilePicture;
+
+    public User(Long id, String firstName, String role, String lastName, String fullName, String email, Integer otp, String password, ForgotPassword forgotPassword, String profilePicture) {
+        this.id = id;
+        this.firstName = firstName;
+        Role = role;
+        this.lastName = lastName;
+        this.fullName = fullName;
+        this.email = email;
+        this.otp = otp;
+        this.password = password;
+        this.forgotPassword = forgotPassword;
+        this.profilePicture = profilePicture;
+    }
 
     public Long getId() {
         return id;
@@ -40,6 +60,14 @@ public class User {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getRole() {
+        return Role;
+    }
+
+    public void setRole(String role) {
+        Role = role;
     }
 
     public String getLastName() {
@@ -66,12 +94,28 @@ public class User {
         this.email = email;
     }
 
+    public Integer getOtp() {
+        return otp;
+    }
+
+    public void setOtp(Integer otp) {
+        this.otp = otp;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public ForgotPassword getForgotPassword() {
+        return forgotPassword;
+    }
+
+    public void setForgotPassword(ForgotPassword forgotPassword) {
+        this.forgotPassword = forgotPassword;
     }
 
     public String getProfilePicture() {
@@ -82,14 +126,20 @@ public class User {
         this.profilePicture = profilePicture;
     }
 
-    public User(Long id, String firstName, String lastName, String fullName, String email, String password, String profilePicture) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.profilePicture = profilePicture;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", Role='" + Role + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", otp=" + otp +
+                ", password='" + password + '\'' +
+                ", forgotPassword=" + forgotPassword +
+                ", profilePicture='" + profilePicture + '\'' +
+                '}';
     }
 
     public User() {
