@@ -1,25 +1,24 @@
 package com.basicproject.project.controller;
 
-import com.basicproject.project.dto.ChangePassword;
-import com.basicproject.project.dto.emaildto;
+import com.basicproject.project.dto.Emaildto;
 import com.basicproject.project.entities.ForgotPassword;
-import com.basicproject.project.entities.User;
+import com.basicproject.project.entities.Responses;
+import com.basicproject.project.entities.Userdto;
 import com.basicproject.project.repository.ForgotPasswordRepository;
-import com.basicproject.project.repository.UserRepository;
+import com.basicproject.project.repository.UserdtoRepository;
 import com.basicproject.project.service.EmailService;
 import com.basicproject.project.service.MailBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/forgotPassword")
@@ -27,7 +26,7 @@ import java.util.UUID;
 public class ForgotPasswordController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserdtoRepository userRepository;
 
     @Autowired
     private EmailService emailService;
@@ -38,71 +37,70 @@ public class ForgotPasswordController {
     @Autowired
     private ForgotPasswordRepository forgotPasswordRepository;
 
-//    public ForgotPasswordController(UserRepository userRepository, EmailService emailService, PasswordEncoder passwordEncoder, ForgotPasswordRepository forgotPasswordRepository) {
-//        this.userRepository = userRepository;
-//        this.emailService = emailService;
-//        this.passwordEncoder = passwordEncoder;
-//        this.forgotPasswordRepository = forgotPasswordRepository;
-//    }
 
-    //send mail for email verification
+
+
 
     @GetMapping("/test")
     public String checkUrl() {
         return "Working::::";
     }
     @PostMapping("/verifyMail")
-    public ResponseEntity<String> verifyEmail(@RequestBody emaildto emaildto){
-        log.info("I dey here");
-//        User user=userRepository.findByEmail(emaildto.getEmail()).orElseThrow(()-> new UsernameNotFoundException("please provide a valid email"));
-        User user=userRepository.findByEmail(emaildto.getEmail()).orElse(null);
+    public ResponseEntity<?> verifyEmail(@RequestBody Emaildto emaildto){
+        Userdto userdto=userRepository.findByEmail(emaildto.getEmail()).orElse(null);
 
-        if(user != null) {
-            String otp = otpGenerator();
-            MailBody mailBody = new MailBody(emaildto.getEmail(), "OTP for forgot password", "This is your otp" + otp);
-            ForgotPassword fp = new ForgotPassword();
+        if(userdto != null) {
+            Integer otp = otpGenerator();
+            MailBody mailBody = new MailBody(emaildto.getEmail(), "OTP for forgot password", "This is your otp " + otp);
+            ForgotPassword fp=new ForgotPassword();
             fp.setOtp(otp);
             fp.setExpirationTime(new Date(System.currentTimeMillis() + 10 * 60 * 1000));
-            fp.setUser(user);
+            fp.setUserdto(userdto);
             emailService.sendSimpleMessage(mailBody);
             forgotPasswordRepository.save(fp);
-            return ResponseEntity.ok("Email sent for verification");
+            return new ResponseEntity<>(new Responses("111","OTP HAS BEEN SENT"),HttpStatus.OK);
         }
         else {
-            return ResponseEntity.ok("Email doesn't exist");
+
+            return new ResponseEntity<>(new Responses("00","Email doesn't exist"),HttpStatus.OK);
         }
     }
-    @PostMapping("/otp-verification")
-    public ResponseEntity<String> verifyOtp(@RequestBody emaildto emaildto)
+    @PostMapping("/otpVerification")
+    public ResponseEntity<?> verifyOtp(@RequestBody Emaildto emaildto)
     {
-        User user=userRepository.findByEmail(emaildto.getEmail()).orElseThrow(()-> new UsernameNotFoundException("please provide a valid email"));
-       ForgotPassword fp= forgotPasswordRepository.findByOtpAndUser(emaildto.getOtp(), user).orElseThrow(()-> new RuntimeException("Invalid otp for email"+emaildto.getEmail()));
-       if(fp.getExpirationTime().before(Date.from(Instant.now())))
-       {
-           forgotPasswordRepository.deleteById(fp.getUser().getId());
-         return new ResponseEntity<>("OTP has expired", HttpStatus.EXPECTATION_FAILED);
-       }
-         return ResponseEntity.ok("OTP verified");
+        Userdto userdto=userRepository.findByEmail(emaildto.getEmail()).orElse(null);
+        ForgotPassword fp=forgotPasswordRepository.findByOtpAnduserdto(emaildto.getOtp(),userdto).orElse(null);
+        if(userdto==null||fp==null){
+            return new ResponseEntity<>(new Responses("00","Invalid otp or wrong email"),HttpStatus.EXPECTATION_FAILED);
+        }
+
+        if (fp.getExpirationTime().before(Date.from(Instant.now())))
+        {
+            forgotPasswordRepository.deleteById(fp.getFpid());
+            return new ResponseEntity<>(new Responses("00","OTP HAS EXPIRED"),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new Responses("111","OTP VERIFIED"),HttpStatus.OK);
     }
     @PostMapping("/changePassword")
-    public ResponseEntity<String> changePasswordHandler(@RequestBody ChangePassword changePassword, @RequestBody emaildto emaildto )
+    public ResponseEntity<?> changePasswordHandler( @RequestBody Emaildto emaildto )
     {
-            if (!Objects.equals(changePassword.getPassword(),changePassword.getRepeatPassword())){
-                return new ResponseEntity<>("Please enter your password again",HttpStatus.EXPECTATION_FAILED);
+        if (!Objects.equals(emaildto.getPassword(), emaildto.getRepeatPassword())) {
+
+            return new ResponseEntity<>(new Responses("00","wrong credentials.Rewrite your username and password"),HttpStatus.EXPECTATION_FAILED);
+        } else {
+            Userdto user = userRepository.findByEmail(emaildto.getEmail()).orElse(null);
+            if(user==null){
+                return new ResponseEntity<>(new Responses("100","Invalid email"),HttpStatus.BAD_REQUEST);
             }
 
-        User user=userRepository.findByEmail(emaildto.getEmail()).orElseThrow(()-> new UsernameNotFoundException("please provide a valid email"));
-
-            user.setPassword(passwordEncoder.encode(changePassword.getPassword()));
+            user.setPassword(passwordEncoder.encode(emaildto.getPassword()));
             userRepository.save(user);
-//        String encodedPassword= passwordEncoder.encode(changePassword.getPassword());
-
-//            userRepository.updatePassword(email,encodedPassword);
-            return ResponseEntity.ok("Password has been changed");
+            return new ResponseEntity<>(new Responses("111","password saved successfully"),HttpStatus.OK);
+        }
     }
-    private String otpGenerator(){
-        return UUID.randomUUID().toString().replace("-", "").substring(0,6);
-//        Random random=new Random();
-//        return random.nextInt(100000,999999);
+    private Integer otpGenerator(){
+        //return UUID.randomUUID().toString().replace("-", "").substring(0,6);
+        Random random=new Random();
+        return random.nextInt(100000);
     }
 }

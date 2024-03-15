@@ -3,12 +3,14 @@ package com.basicproject.project.entities;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Builder
 public class ForgotPassword
@@ -17,23 +19,27 @@ public class ForgotPassword
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Integer fpid;
     @Column(nullable = false)
-    private String otp;
+    private Integer otp;
     @Column(nullable = false)
     private Date expirationTime;
     @OneToOne
-    private User user;
+    private Userdto userdto;
 
-    public ForgotPassword(String otp, Date expirationTime, User user) {
-        this.otp = otp;
-        this.expirationTime = expirationTime;
-        this.user = user;
+
+
+    public Integer getFpid() {
+        return fpid;
     }
 
-    public String getOtp() {
+    public void setFpid(Integer fpid) {
+        this.fpid = fpid;
+    }
+
+    public Integer getOtp() {
         return otp;
     }
 
-    public void setOtp(String otp) {
+    public void setOtp(Integer otp) {
         this.otp = otp;
     }
 
@@ -45,24 +51,21 @@ public class ForgotPassword
         this.expirationTime = expirationTime;
     }
 
-    public User getUser() {
-        return user;
+    public Userdto getUserdto() {
+        return userdto;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public ForgotPassword() {
+    public void setUserdto(Userdto userdto) {
+        this.userdto = userdto;
     }
 
     @Override
     public String toString() {
         return "ForgotPassword{" +
                 "fpid=" + fpid +
-                ", otp=" + otp +
+                ", otp='" + otp + '\'' +
                 ", expirationTime=" + expirationTime +
-                ", user=" + user +
+                ", userdto=" + userdto +
                 '}';
     }
 }

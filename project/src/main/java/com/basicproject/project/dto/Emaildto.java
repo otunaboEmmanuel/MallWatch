@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class emaildto {
+public class Emaildto {
     private String email;
     private Integer otp;
+    private String password;
+    private String repeatPassword;
 
 }
