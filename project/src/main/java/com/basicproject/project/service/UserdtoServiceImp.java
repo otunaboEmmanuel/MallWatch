@@ -5,6 +5,7 @@ package com.basicproject.project.service;
 import com.basicproject.project.entities.Userdto;
 import com.basicproject.project.repository.UserdtoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +22,6 @@ public class UserdtoServiceImp implements UserdtoService {
         return (user1==null )? userRepository.save(userdto):null;
 
     }
+
+
 }

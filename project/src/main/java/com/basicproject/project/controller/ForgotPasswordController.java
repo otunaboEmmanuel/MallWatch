@@ -58,11 +58,11 @@ public class ForgotPasswordController {
             fp.setUserdto(userdto);
             emailService.sendSimpleMessage(mailBody);
             forgotPasswordRepository.save(fp);
-            return new ResponseEntity<>(new Responses("111","OTP HAS BEEN SENT"),HttpStatus.OK);
+            return new ResponseEntity<>(new Responses("00","OTP HAS BEEN SENT"),HttpStatus.OK);
         }
         else {
 
-            return new ResponseEntity<>(new Responses("00","Email doesn't exist"),HttpStatus.OK);
+            return new ResponseEntity<>(new Responses("111","Email doesn't exist"),HttpStatus.OK);
         }
     }
     @PostMapping("/otpVerification")
@@ -71,31 +71,31 @@ public class ForgotPasswordController {
         Userdto userdto=userRepository.findByEmail(emaildto.getEmail()).orElse(null);
         ForgotPassword fp=forgotPasswordRepository.findByOtpAnduserdto(emaildto.getOtp(),userdto).orElse(null);
         if(userdto==null||fp==null){
-            return new ResponseEntity<>(new Responses("00","Invalid otp or wrong email"),HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(new Responses("100","Invalid otp or wrong email"),HttpStatus.EXPECTATION_FAILED);
         }
 
         if (fp.getExpirationTime().before(Date.from(Instant.now())))
         {
             forgotPasswordRepository.deleteById(fp.getFpid());
-            return new ResponseEntity<>(new Responses("00","OTP HAS EXPIRED"),HttpStatus.OK);
+            return new ResponseEntity<>(new Responses("100","OTP HAS EXPIRED"),HttpStatus.OK);
         }
-        return new ResponseEntity<>(new Responses("111","OTP VERIFIED"),HttpStatus.OK);
+        return new ResponseEntity<>(new Responses("00","OTP VERIFIED"),HttpStatus.OK);
     }
     @PostMapping("/changePassword")
     public ResponseEntity<?> changePasswordHandler( @RequestBody Emaildto emaildto )
     {
         if (!Objects.equals(emaildto.getPassword(), emaildto.getRepeatPassword())) {
 
-            return new ResponseEntity<>(new Responses("00","wrong credentials.Rewrite your username and password"),HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(new Responses("111","wrong credentials.Rewrite your username and password"),HttpStatus.EXPECTATION_FAILED);
         } else {
             Userdto user = userRepository.findByEmail(emaildto.getEmail()).orElse(null);
             if(user==null){
-                return new ResponseEntity<>(new Responses("100","Invalid email"),HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(new Responses("111","Invalid email"),HttpStatus.BAD_REQUEST);
             }
 
             user.setPassword(passwordEncoder.encode(emaildto.getPassword()));
             userRepository.save(user);
-            return new ResponseEntity<>(new Responses("111","password saved successfully"),HttpStatus.OK);
+            return new ResponseEntity<>(new Responses("00","password saved successfully"),HttpStatus.OK);
         }
     }
     private Integer otpGenerator(){

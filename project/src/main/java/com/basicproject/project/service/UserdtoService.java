@@ -5,4 +5,7 @@ import com.basicproject.project.entities.Userdto;
 
 public interface UserdtoService {
     Userdto saveUsers(Userdto userdto);
+
+
+
 }
