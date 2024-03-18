@@ -19,4 +19,7 @@ public class ProductDto {
     private String discounted;
     private double discountedPrice;
     private int availableUnits;
+    private String userId;
+    private Long ProductId;
+    private Long ProductImages;
 }

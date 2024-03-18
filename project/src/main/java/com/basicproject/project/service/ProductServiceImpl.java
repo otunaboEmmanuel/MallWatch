@@ -23,4 +23,26 @@ public class ProductServiceImpl implements ProductService{
     public List<Products> findAllProductsByStore(String storeName) {
         return productRepository.findByStoreName(storeName);
     }
+
+    @Override
+    public void deleteProduct(Long productId) {
+         productRepository.deleteById(productId);
+    }
+
+    @Override
+    public List<Products> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    @Override
+    public List<Products> findAllProductsByCategory(String categoryName) {
+        return productRepository.findByCategory(categoryName);
+    }
+
+    @Override
+    public List<Products> findAllProductsBySubCategory(String subCategoryName) {
+        return productRepository.findBySubCategory(subCategoryName);
+    }
+
+
 }

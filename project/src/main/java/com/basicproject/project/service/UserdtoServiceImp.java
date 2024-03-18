@@ -2,6 +2,7 @@ package com.basicproject.project.service;
 
 
 
+import com.basicproject.project.dto.UserRoles;
 import com.basicproject.project.entities.Userdto;
 import com.basicproject.project.repository.UserdtoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,15 @@ public class UserdtoServiceImp implements UserdtoService {
     @Override
     public Userdto saveUsers(Userdto userdto) {
         Userdto user1 = userRepository.findByEmail(userdto.getEmail()).orElse(null);
-        userdto.setPassword(bcryptEncoder.encode(userdto.getPassword()));
-        return (user1==null )? userRepository.save(userdto):null;
 
+        if(user1 == null) {
+            return null;
+        }
+        else {
+            userdto.setPassword(bcryptEncoder.encode(userdto.getPassword()));
+            userdto.setRoles(UserRoles.USER);
+            return userRepository.save(userdto);
+        }
     }
 
 

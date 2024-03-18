@@ -1,38 +1,20 @@
 package com.basicproject.project.dto;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class LoginDto {
     private String email;
     private String password;
 
-    public LoginDto(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
+    private String initiatorUserId;
+    private String userId;
+    private String storeName;
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public LoginDto() {
-    }
-
-    @Override
-    public String toString() {
-        return "LoginDto{" +
-                "email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
 }

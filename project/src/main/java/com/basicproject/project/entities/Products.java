@@ -19,7 +19,7 @@ public class Products {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String productId;
+    private Long productId;
 
     @Column(name = "store_name")
     private String storeName;
