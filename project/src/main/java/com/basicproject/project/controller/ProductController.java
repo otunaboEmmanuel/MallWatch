@@ -42,7 +42,7 @@ public class ProductController {
         log.info("Incoming requests with body "+products.toString());
 
         Products result = productService.addNewProduct(products);
-        return products != null ? new ResponseEntity<>(new Responses("00", "Record Saved Successfully"), HttpStatus.OK)
+        return result != null ? new ResponseEntity<>(new Responses("00", "Record Saved Successfully"), HttpStatus.OK)
                 : new ResponseEntity<>(new Responses("99", "Record not saved, Ensure product name does not exist"), HttpStatus.OK);
     }
 
@@ -66,13 +66,13 @@ public class ProductController {
     }
     @PostMapping("/allProducts-category")
     public ResponseEntity<?> getAllProductsByCategory(@RequestBody ProductDto productDto){
-        List<Products> Category = productService.findAllProductsByCategory(productDto.getCategoryName());
+        List<Products> Category = productService.findAllProductsByCategoryName(productDto.getCategoryName());
         return new ResponseEntity<>(Category, HttpStatus.OK);
     }
-    @PostMapping("/findProductsByStore")
+    @PostMapping("/findProductsBySubCategory")
     public ResponseEntity<?> findProductsBySubCategory(@RequestBody ProductDto productDto) {
 
-        List<Products> SubCategory = productService.findAllProductsBySubCategory(productDto.getSubCategoryName());
+        List<Products> SubCategory = productService.findAllProductsBySubCategoryName(productDto.getSubCategoryName());
         return new ResponseEntity<>(SubCategory, HttpStatus.OK);
     }
     @PostMapping("/updateProducts")

@@ -16,7 +16,7 @@ public class ProductServiceImpl implements ProductService{
     public Products addNewProduct(Products products) {
 
         Products products1 = productRepository.findByProductName(products.getProductName()).orElse(null);
-        return products1 != null ? productRepository.save(products) : null;
+        return products1 == null ? productRepository.save(products) : null;
     }
 
     @Override
@@ -34,14 +34,16 @@ public class ProductServiceImpl implements ProductService{
         return productRepository.findAll();
     }
 
+
+
     @Override
-    public List<Products> findAllProductsByCategory(String categoryName) {
-        return productRepository.findByCategory(categoryName);
+    public List<Products> findAllProductsByCategoryName(String categoryName) {
+        return productRepository.findByCategoryName(categoryName);
     }
 
     @Override
-    public List<Products> findAllProductsBySubCategory(String subCategoryName) {
-        return productRepository.findBySubCategory(subCategoryName);
+    public List<Products> findAllProductsBySubCategoryName(String subCategoryName) {
+        return productRepository.findBySubCategoryName(subCategoryName);
     }
 
 

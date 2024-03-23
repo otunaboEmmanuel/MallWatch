@@ -27,18 +27,13 @@ public class UserController {
     private UserdtoRepository userRepository;
     @PostMapping("/saveusers")
     public ResponseEntity<?> saveUsers(@RequestBody Userdto userdto) {
-
-
-        if(userdto.getEmail() == null || userdto.getFirstName() == null){
-
-        }
-
         Responses responses=new Responses();
         Userdto userResult = userdtoService.saveUsers(userdto);
-        return (userResult == null)? new ResponseEntity<>(new Responses("111","email or username already in use"),HttpStatus.OK):new ResponseEntity<>(new Responses("00", "user saved successfully"), HttpStatus.OK);
+        return (userResult == null)? new ResponseEntity<>(new Responses("100","email or username already in use"),HttpStatus.OK):new ResponseEntity<>(new Responses("00", "user saved successfully"), HttpStatus.OK);
 
     }
-//    @PostMapping("/login")
+
+    //    @PostMapping("/login")
 //    public ResponseEntity<?>findByEmailAndPassword(@RequestBody Userdto userdto)
 //    {
 //       Userdto login=userRepository.findByEmailAndPassword(userdto.getEmail(), userdto.getPassword()).orElse(null);

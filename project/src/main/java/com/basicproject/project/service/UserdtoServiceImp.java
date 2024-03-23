@@ -19,16 +19,12 @@ public class UserdtoServiceImp implements UserdtoService {
     @Override
     public Userdto saveUsers(Userdto userdto) {
         Userdto user1 = userRepository.findByEmail(userdto.getEmail()).orElse(null);
+        userdto.setPassword(bcryptEncoder.encode(userdto.getPassword()));
 
-        if(user1 == null) {
-            return null;
-        }
-        else {
-            userdto.setPassword(bcryptEncoder.encode(userdto.getPassword()));
-            userdto.setRoles(UserRoles.USER);
-            return userRepository.save(userdto);
-        }
+        return (user1==null )? userRepository.save(userdto):null;
+
     }
 
 
 }
+

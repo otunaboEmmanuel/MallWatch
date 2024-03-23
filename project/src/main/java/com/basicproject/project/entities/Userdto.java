@@ -16,21 +16,24 @@ import lombok.NoArgsConstructor;
 public class Userdto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long userId;
     @Column(name = "firstName")
     private String firstName;
-    @Column(name = "email",unique = true)
+    @Column(name = "email")
     private String email;
     @Column(name = "lastName")
     private String lastName;
     @Column(name="password")
     private String password;
+    @Column(name = "store")
+    private String store;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_roles")
     private UserRoles roles;
 
-    private String store;
+
+
 
 
 }
